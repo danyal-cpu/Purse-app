@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#080808">
+<title>PURSE — Personal Finance</title>
+<style>
+:root{--bg:#070707;--card:#111;--card2:#171717;--line:#292929;--gold:#d4af37;--gold2:#f2d36b;--muted:#9a9a9a;--text:#f5f5f5;--green:#67d38a;--red:#ff7777;--blue:#8eb8ff}
+*{box-sizing:border-box}html{background:var(--bg)}body{margin:0;background:radial-gradient(circle at 50% -10%,#2a2108 0,#0a0907 25%,#070707 55%);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif}
+button,input,select{font:inherit}.app{width:min(560px,100%);margin:auto;padding:20px 16px 100px}.brand{display:flex;justify-content:space-between;align-items:center;margin:4px 2px 18px}.logo{font-weight:950;font-size:29px;letter-spacing:6px;color:var(--gold2)}.tag{font-size:9px;color:#777;letter-spacing:1px}
+.balance{padding:20px;border:1px solid #4c3c11;border-radius:22px;background:linear-gradient(145deg,#17130a,#0e0e0e);box-shadow:0 18px 55px #0008}.muted{color:var(--muted);font-size:11px}.amount{font-size:38px;font-weight:850;margin:5px 0 16px}.row{display:flex;gap:10px}.mini{flex:1;background:#0c0c0c;border:1px solid #272727;border-radius:14px;padding:12px}.mini b{display:block;margin-top:5px;font-size:16px}.gold{color:var(--gold2)}.green{color:var(--green)}.red{color:var(--red)}
+.panel{margin-top:16px;background:#0f0f0f;border:1px solid var(--line);border-radius:20px;padding:16px}.sectionhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.sectionhead h2{font-size:16px;margin:0}.action{border:0;background:none;color:var(--gold2);font-weight:750;font-size:12px;cursor:pointer}
+.filter{display:flex;gap:8px;margin-bottom:13px}.filter select{flex:1}
+.chartwrap{display:flex;gap:18px;align-items:center}.donut{width:156px;height:156px;min-width:156px;border-radius:50%;position:relative;background:conic-gradient(#333 0 100%)}.donut:after{content:"";position:absolute;inset:35px;background:#0f0f0f;border-radius:50%;border:1px solid #242424}.center{position:absolute;inset:0;display:grid;place-items:center;text-align:center;z-index:2;font-size:11px;color:#aaa}.center b{display:block;color:#fff;font-size:15px}.legend{flex:1;font-size:11px;color:#bbb}.legend div{display:flex;align-items:center;gap:7px;margin:7px 0}.dot{width:9px;height:9px;border-radius:50%;display:inline-block}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-top:16px}.card{background:linear-gradient(145deg,#141414,#0c0c0c);border:1px solid #272727;border-radius:17px;padding:15px;min-height:103px;cursor:pointer}.card:active{transform:scale(.985)}.icon{font-size:22px}.card h3{font-size:14px;margin:8px 0 3px}.card .value{font-size:12px;color:var(--gold2)}.card p{font-size:10px;color:#777;margin:3px 0 0}
+.people .person,.tx{display:flex;justify-content:space-between;gap:10px;align-items:center;background:#111;border:1px solid #242424;border-radius:13px;padding:12px;margin:7px 0}.personname{font-weight:750;font-size:13px}.sub{font-size:10px;color:#777;margin-top:3px}.txlist{max-height:440px;overflow:auto}.tx .left{min-width:0}.tx .desc{font-size:12px;font-weight:650;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.tx .meta{font-size:10px;color:#777;margin-top:3px}.tx .right{text-align:right;white-space:nowrap}.tx .amt{font-weight:800;font-size:13px}.tx .tools{margin-top:4px}.tiny{background:none;border:0;color:#aaa;font-size:11px;padding:2px 4px}.empty{padding:18px;text-align:center;color:#666;font-size:12px;border:1px dashed #292929;border-radius:12px}
+.fab{position:fixed;z-index:20;bottom:16px;left:50%;transform:translateX(-50%);width:min(528px,calc(100% - 32px));padding:16px;border:0;border-radius:16px;background:linear-gradient(90deg,#a47e19,#e5c75b);color:#090909;font-weight:950;box-shadow:0 14px 40px #000;cursor:pointer}
+.modal{display:none;position:fixed;z-index:50;inset:0;background:#000b;backdrop-filter:blur(8px);align-items:flex-end}.modal.open{display:flex}.sheet{width:min(560px,100%);max-height:92vh;overflow:auto;background:#121212;border:1px solid #4a3a10;border-radius:24px 24px 0 0;padding:18px}.sheet h2{margin:0 0 14px;color:var(--gold2);font-size:19px}.close{float:right;border:0;background:none;color:#aaa;font-size:25px}.field{margin:11px 0}.field label{display:block;font-size:10px;color:#999;margin:0 0 5px}.field input,.field select{width:100%;padding:12px;border-radius:11px;border:1px solid #333;background:#090909;color:#fff;outline:none}.field input:focus,.field select:focus{border-color:#8f7420}.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}.save{width:100%;margin-top:8px;padding:14px;border:0;border-radius:12px;background:var(--gold);color:#080808;font-weight:900}.danger{background:#2a0f0f;color:#ff8d8d}.hint{font-size:10px;color:#777;line-height:1.45;margin-top:5px}
+.toast{position:fixed;z-index:100;left:50%;bottom:78px;transform:translateX(-50%);background:#1d1d1d;border:1px solid #514212;color:#fff;padding:11px 15px;border-radius:12px;font-size:12px;display:none}.toast.show{display:block}
+@media(min-width:700px){body{padding:20px}.app{border:1px solid #222;border-radius:28px;background:#080808}}
+</style>
+</head>
+<body>
+<main class="app">
+  <div class="brand"><div class="logo">PURSE</div><div class="tag">YOUR MONEY. YOUR CONTROL.</div></div>
+
+  <section class="balance">
+    <div class="muted">Available Balance</div><div class="amount" id="balance">AED 0</div>
+    <div class="row">
+      <div class="mini"><div class="muted">Total Income</div><b class="gold" id="income">AED 0</b></div>
+      <div class="mini"><div class="muted">Savings</div><b id="saving">AED 0</b></div>
+    </div>
+    <div class="row" style="margin-top:10px">
+      <div class="mini"><div class="muted">Lent Out</div><b id="lent">AED 0</b></div>
+      <div class="mini"><div class="muted">Borrowed</div><b id="borrowed">AED 0</b></div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="sectionhead"><h2>Financial Overview</h2><button class="action" onclick="openReport()">REPORT</button></div>
+    <div class="filter"><select id="monthFilter" onchange="render()"></select><button class="action" onclick="setCurrentMonth()">THIS MONTH</button></div>
+    <div class="chartwrap"><div class="donut" id="donut"><div class="center" id="chartCenter">AED 0</div></div><div class="legend" id="legend"></div></div>
+  </section>
+
+  <div class="grid" id="grid"></div>
+
+  <section class="panel people">
+    <div class="sectionhead"><h2>People Ledger</h2><button class="action" onclick="openPersonModal()">＋ ADD PERSON</button></div>
+    <div id="peopleList"></div>
+  </section>
+
+  <section class="panel">
+    <div class="sectionhead"><h2>Recent Transactions</h2><button class="action" onclick="openHistory()">VIEW ALL</button></div>
+    <div id="recent"></div>
+  </section>
+</main>
+
+<button class="fab" onclick="openTxModal()">＋ ADD TRANSACTION</button>
+
+<div class="modal" id="txModal"><div class="sheet">
+  <button class="close" onclick="closeModal('txModal')">×</button><h2 id="txTitle">Add Transaction</h2>
+  <input type="hidden" id="editId">
+  <div class="field"><label>Section</label><select id="txType" onchange="updateTxFields()"></select></div>
+  <div class="two">
+    <div class="field"><label>Amount (AED)</label><input id="txAmount" type="number" min="0" step="0.01" placeholder="0.00"></div>
+    <div class="field"><label>Date</label><input id="txDate" type="date"></div>
+  </div>
+  <div class="field" id="personField"><label>Person / Name (optional)</label><input id="txPerson" placeholder="e.g. Ali"></div>
+  <div class="field"><label>Description / Note</label><input id="txDesc" placeholder="e.g. Monthly salary, rent, groceries"></div>
+  <div class="field" id="directionField" style="display:none"><label>People transaction</label><select id="txDirection"><option value="lent">I lent money</option><option value="borrowed">I borrowed money</option><option value="received">I received repayment</option><option value="repaid">I repaid borrowed money</option></select></div>
+  <div class="hint" id="txHint"></div>
+  <button class="save" onclick="saveTx()">SAVE</button>
+  <button class="save danger" id="deleteBtn" onclick="deleteEditing()" style="display:none">DELETE TRANSACTION</button>
+</div></div>
+
+<div class="modal" id="personModal"><div class="sheet">
+  <button class="close" onclick="closeModal('personModal')">×</button><h2>Add Person</h2>
+  <div class="field"><label>Name</label><input id="personName" placeholder="e.g. Ahmed"></div>
+  <div class="field"><label>Opening Balance (optional)</label><input id="personOpening" type="number" min="0" step="0.01" placeholder="0"></div>
+  <div class="field"><label>Opening Balance Type</label><select id="personOpeningType"><option value="lent">They owe me</option><option value="borrowed">I owe them</option></select></div>
+  <button class="save" onclick="savePerson()">ADD PERSON</button>
+</div></div>
+
+<div class="modal" id="listModal"><div class="sheet">
+  <button class="close" onclick="closeModal('listModal')">×</button><h2 id="listTitle">Transactions</h2><div id="listContent"></div>
+</div></div>
+
+<div class="modal" id="personDetailModal"><div class="sheet">
+  <button class="close" onclick="closeModal('personDetailModal')">×</button><h2 id="personDetailTitle">Person</h2><div id="personDetail"></div>
+  <button class="save" onclick="addForPerson()">＋ ADD TRANSACTION FOR THIS PERSON</button>
+</div></div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const CATEGORIES=[
+ {id:'Salary',name:'Salary',icon:'💰',kind:'income'},
+ {id:'Saving',name:'Saving',icon:'💎',kind:'saving'},
+ {id:'Lending',name:'Lending',icon:'🤝',kind:'lending'},
+ {id:'Borrowing',name:'Borrowing',icon:'💳',kind:'borrowing'},
+ {id:'Leisure',name:'Leisure',icon:'🍸',kind:'expense'},
+ {id:'Expenses',name:'Expenses',icon:'💸',kind:'expense'},
+ {id:'Weekly Commission',name:'Weekly Commission',icon:'📈',kind:'income'},
+ {id:'Miscellaneous',name:'Miscellaneous',icon:'📦',kind:'expense'}
+];
+const KEY='purse_v2_data', PEOPLE_KEY='purse_v2_people';
+let data=JSON.parse(localStorage.getItem(KEY)||'[]');
+let people=JSON.parse(localStorage.getItem(PEOPLE_KEY)||'[]');
+let activePerson=null;
+
+const $=id=>document.getElementById(id);
+const money=n=>'AED '+Number(n||0).toLocaleString('en-AE',{minimumFractionDigits:0,maximumFractionDigits:2});
+const today=()=>new Date().toISOString().slice(0,10);
+const monthOf=d=>(d||'').slice(0,7);
+const id=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+
+function save(){localStorage.setItem(KEY,JSON.stringify(data));localStorage.setItem(PEOPLE_KEY,JSON.stringify(people));}
+function toast(s){$('toast').textContent=s;$('toast').classList.add('show');setTimeout(()=>$('toast').classList.remove('show'),1800)}
+function closeModal(x){$(x).classList.remove('open')}
+function openModal(x){$(x).classList.add('open')}
+
+function init(){
+ const opts=CATEGORIES.map(c=>`<option value="${c.id}">${c.name}</option>`).join('');
+ $('txType').innerHTML=opts+`<option value="People">People Ledger</option>`;
+ const months=[...new Set([today().slice(0,7),...data.map(x=>monthOf(x.date)).filter(Boolean)])].sort().reverse();
+ $('monthFilter').innerHTML=`<option value="all">All time</option>`+months.map(m=>`<option value="${m}">${new Date(m+'-01').toLocaleString('en',{month:'long',year:'numeric'})}</option>`).join('');
+ $('monthFilter').value=today().slice(0,7);
+ render();
+}
+function setCurrentMonth(){$('monthFilter').value=today().slice(0,7);render()}
+function selectedData(){const m=$('monthFilter').value;return m==='all'?data:data.filter(x=>monthOf(x.date)===m)}
+function amountFor(type,arr=selectedData()){return arr.filter(x=>x.type===type).reduce((s,x)=>s+Number(x.amount||0),0)}
+
+function render(){
+ const arr=selectedData();
+ const income=arr.filter(x=>['Salary','Weekly Commission'].includes(x.type)).reduce((s,x)=>s+x.amount,0);
+ const savings=amountFor('Saving',arr);
+ const lending=amountFor('Lending',arr), borrowing=amountFor('Borrowing',arr);
+ const expenses=arr.filter(x=>['Expenses','Leisure','Miscellaneous'].includes(x.type)).reduce((s,x)=>s+x.amount,0);
+ // Balance model: income + money borrowed - expenses - savings - money lent.
+ const balance=income+borrowing-expenses-savings-lending;
+ $('balance').textContent=money(balance);$('income').textContent=money(income);$('saving').textContent=money(savings);$('lent').textContent=money(lending);$('borrowed').textContent=money(borrowing);
+ renderChart(arr);
+ $('grid').innerHTML=CATEGORIES.map(c=>`<div class="card" onclick="openCategory('${c.id}')"><div class="icon">${c.icon}</div><h3>${c.name}</h3><div class="value">${money(amountFor(c.id,arr))}</div><p>${c.id==='Weekly Commission'?'Auto counted in Salary':'Tap to view history'}</p></div>`).join('');
+ renderPeople();renderRecent();
+}
+function renderChart(arr){
+ const vals=[
+ ['Salary + Commission',arr.filter(x=>['Salary','Weekly Commission'].includes(x.type)).reduce((s,x)=>s+x.amount,0),'#d4af37'],
+ ['Savings',amountFor('Saving',arr),'#8f7624'],
+ ['Expenses',arr.filter(x=>['Expenses','Leisure','Miscellaneous'].includes(x.type)).reduce((s,x)=>s+x.amount,0),'#b99a38'],
+ ['Lending',amountFor('Lending',arr),'#6e5a1b'],
+ ['Borrowing',amountFor('Borrowing',arr),'#c8a93e']
+ ];
+ const total=vals.reduce((s,v)=>s+v[1],0);
+ let cur=0,parts=[];
+ vals.forEach(v=>{const pct=total?v[1]/total*100:0;parts.push(`${v[2]} ${cur}% ${cur+pct}%`);cur+=pct});
+ $('donut').style.background=total?`conic-gradient(${parts.join(',')})`:'conic-gradient(#333 0 100%)';
+ $('chartCenter').innerHTML=`<div><b>${money(total)}</b>tracked</div>`;
+ $('legend').innerHTML=vals.map(v=>`<div><span class="dot" style="background:${v[2]}"></span>${v[0]} <b style="margin-left:auto">${money(v[1])}</b></div>`).join('');
+}
+function renderPeople(){
+ if(!people.length){$('peopleList').innerHTML='<div class="empty">No people yet. Add someone to start a personal ledger.</div>';return}
+ $('peopleList').innerHTML=people.map(p=>{
+   const b=personBalance(p.name);
+   return `<div class="person" onclick="openPerson('${esc(p.name)}')"><div><div class="personname">${esc(p.name)}</div><div class="sub">${b>0?'They owe you':b<0?'You owe them':'Settled'}</div></div><b class="${b>0?'green':b<0?'red':''}">${money(Math.abs(b))}</b></div>`
+ }).join('');
+}
+function personBalance(name){
+ let bal=0;
+ data.filter(x=>x.type==='People'&&x.person===name).forEach(x=>{
+   if(x.direction==='lent')bal+=x.amount;
+   if(x.direction==='borrowed')bal-=x.amount;
+   if(x.direction==='received')bal-=x.amount;
+   if(x.direction==='repaid')bal+=x.amount;
+ });
+ const p=people.find(x=>x.name===name);if(p)bal+=p.openingType==='lent'?p.opening:-p.opening;
+ return bal;
+}
+function renderRecent(){
+ const arr=[...selectedData()].sort((a,b)=>b.date.localeCompare(a.date)||b.created-b.created).slice(0,5);
+ $('recent').innerHTML=arr.length?arr.map(txHtml).join(''):'<div class="empty">No transactions for this period.</div>';
+}
+function txHtml(x){
+ const sign=['Salary','Weekly Commission','Borrowing'].includes(x.type)?'+':'-';
+ return `<div class="tx"><div class="left"><div class="desc">${esc(x.desc||x.type)}${x.person?' · '+esc(x.person):''}</div><div class="meta">${esc(x.type)} · ${x.date}</div></div><div class="right"><div class="amt ${sign==='+'?'green':'red'}">${sign}${money(x.amount).replace('AED ','')}</div><div class="tools"><button class="tiny" onclick="event.stopPropagation();editTx('${x.id}')">Edit</button><button class="tiny" onclick="event.stopPropagation();deleteTx('${x.id}')">Delete</button></div></div></div>`;
+}
+function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
+
+function openTxModal(type){
+ $('editId').value='';$('txTitle').textContent='Add Transaction';$('deleteBtn').style.display='none';$('txAmount').value='';$('txPerson').value='';$('txDesc').value='';$('txDate').value=today();$('txType').value=type||'Salary';$('txDirection').value='lent';updateTxFields();openModal('txModal');
+}
+function updateTxFields(){
+ const t=$('txType').value,isPeople=t==='People';
+ $('personField').style.display=isPeople?'block':'none';$('directionField').style.display=isPeople?'block':'none';
+ $('txHint').textContent=t==='Weekly Commission'?'This amount is automatically included in Total Income / Salary.':isPeople?'People transactions update the person’s outstanding balance automatically.':'';
+}
+function saveTx(){
+ const t=$('txType').value,a=Number($('txAmount').value),date=$('txDate').value;
+ if(!a||a<0||!date)return toast('Enter amount and date');
+ const obj={id:$('editId').value||id(),type:t,amount:a,date,person:$('txPerson').value.trim(),desc:$('txDesc').value.trim(),direction:t==='People'?$('txDirection').value:null,created:Date.now()};
+ if(!obj.desc)obj.desc=t==='People'?'People transaction':t;
+ const existing=data.findIndex(x=>x.id===obj.id);if(existing>=0)data[existing]=obj;else data.push(obj);
+ save();closeModal('txModal');refreshMonths();render();toast(existing>=0?'Transaction updated':'Transaction saved');
+}
+function editTx(txid){
+ const x=data.find(v=>v.id===txid);if(!x)return;
+ $('editId').value=x.id;$('txTitle').textContent='Edit Transaction';$('deleteBtn').style.display='block';
+ $('txType').value=x.type;$('txAmount').value=x.amount;$('txDate').value=x.date;$('txPerson').value=x.person||'';$('txDesc').value=x.desc||'';$('txDirection').value=x.direction||'lent';updateTxFields();openModal('txModal');
+}
+function deleteTx(txid){if(!confirm('Delete this transaction?'))return;data=data.filter(x=>x.id!==txid);save();render();toast('Deleted')}
+function deleteEditing(){const idd=$('editId').value;if(idd)deleteTx(idd);closeModal('txModal')}
+function refreshMonths(){
+ const current=$('monthFilter').value;
+ const months=[...new Set([today().slice(0,7),...data.map(x=>monthOf(x.date)).filter(Boolean)])].sort().reverse();
+ $('monthFilter').innerHTML=`<option value="all">All time</option>`+months.map(m=>`<option value="${m}">${new Date(m+'-01').toLocaleString('en',{month:'long',year:'numeric'})}</option>`).join('');
+ $('monthFilter').value=months.includes(current)?current:today().slice(0,7);
+}
+function openCategory(t){
+ const arr=data.filter(x=>x.type===t).sort((a,b)=>b.date.localeCompare(a.date));
+ $('listTitle').textContent=t==='Weekly Commission'?'Weekly Commission (included in Salary)':t+' History';
+ $('listContent').innerHTML=arr.length?arr.map(txHtml).join(''):'<div class="empty">No records yet.</div>';
+ openModal('listModal');
+}
+function openHistory(){
+ const arr=[...selectedData()].sort((a,b)=>b.date.localeCompare(a.date));
+ $('listTitle').textContent='All Transactions';
+ $('listContent').innerHTML=arr.length?arr.map(txHtml).join(''):'<div class="empty">No transactions.</div>';
+ openModal('listModal');
+}
+function openReport(){
+ const arr=selectedData(),inc=arr.filter(x=>['Salary','Weekly Commission'].includes(x.type)).reduce((s,x)=>s+x.amount,0),sav=amountFor('Saving',arr),lend=amountFor('Lending',arr),bor=amountFor('Borrowing',arr),exp=arr.filter(x=>['Expenses','Leisure','Miscellaneous'].includes(x.type)).reduce((s,x)=>s+x.amount,0);
+ $('listTitle').textContent='Financial Report';
+ $('listContent').innerHTML=`<div class="person"><span>Salary + Commission</span><b class="green">${money(inc)}</b></div><div class="person"><span>Savings</span><b>${money(sav)}</b></div><div class="person"><span>Lending</span><b>${money(lend)}</b></div><div class="person"><span>Borrowing</span><b class="green">${money(bor)}</b></div><div class="person"><span>Expenses + Leisure + Misc.</span><b class="red">${money(exp)}</b></div><div class="person"><span>Available Balance</span><b>${money(inc+bor-exp-sav-lend)}</b></div>`;
+ openModal('listModal');
+}
+function openPersonModal(){$('personName').value='';$('personOpening').value='';openModal('personModal')}
+function savePerson(){
+ const name=$('personName').value.trim(),opening=Number($('personOpening').value||0);
+ if(!name)return toast('Enter a name');
+ if(people.some(p=>p.name.toLowerCase()===name.toLowerCase()))return toast('Person already exists');
+ people.push({name,opening,openingType:$('personOpeningType').value});save();closeModal('personModal');render();toast('Person added');
+}
+function openPerson(name){
+ activePerson=name;$('personDetailTitle').textContent=name;
+ const txs=data.filter(x=>x.type==='People'&&x.person===name).sort((a,b)=>b.date.localeCompare(a.date));
+ const b=personBalance(name);
+ $('personDetail').innerHTML=`<div class="balance" style="padding:15px;margin-bottom:12px"><div class="muted">${b>0?'They owe you':b<0?'You owe them':'Settled'}</div><div class="amount" style="font-size:28px">${money(Math.abs(b))}</div></div>${txs.length?txs.map(txHtml).join(''):'<div class="empty">No ledger transactions yet.</div>'}`;
+ openModal('personDetailModal');
+}
+function addForPerson(){closeModal('personDetailModal');openTxModal('People');$('txPerson').value=activePerson;updateTxFields()}
+
+init();
+</script>
+</body>
+</html>
